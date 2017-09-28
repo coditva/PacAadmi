@@ -4,6 +4,7 @@
 
 #include "display.h"
 #include "input.h"
+#include "key_mappings.h"
 
 void init();
 void destroy();
@@ -23,13 +24,13 @@ int main(int argc, char *argv[])
 
 void take_action(int key)
 {
-    if (key == 'j') {
+    if (key == MOVE_DOWN) {
         pos.y++;
-    } else if (key == 'k') {
+    } else if (key == MOVE_UP) {
         pos.y--;
-    } else if (key == 'h') {
+    } else if (key == MOVE_LEFT) {
         pos.x--;
-    } else if (key == 'l') {
+    } else if (key == MOVE_RIGHT) {
         pos.x++;
     }
 }
@@ -38,7 +39,7 @@ void game_loop()
 {
     display_draw();
     int key;
-    while (key != 'q') {
+    while (key != QUIT) {
         display_draw();
         key = input_get_key();
         take_action(key);
@@ -49,6 +50,7 @@ void game_loop()
 void init()
 {
     display_init();
+    key_mappings_init();
     pos.x = 0;
     pos.y = 0;
 }

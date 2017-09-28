@@ -1,5 +1,7 @@
 #include <ncurses.h>
+
 #include "input.h"
+#include "key_mappings.h"
 
 void input_init()
 {
@@ -11,16 +13,15 @@ void input_destroy()
 
 int input_get_key()
 {
-    int key = getch();
-    if (key == KEY_DOWN) {
-        return 'j';
-    } else if (key == KEY_UP) {
-        return 'k';
-    } else if (key == KEY_LEFT) {
-        return 'h';
-    } else if (key == KEY_RIGHT) {
-        return 'l';
-    } else {
-        return key;
+    int input;
+
+    input = getch();
+    for (int i = 1; i < KEY_MAP_SIZE; ++i) {
+        if (input == key_map[i]) {
+            return i;
+        }
     }
+
+    // return nop;
+    return KEY_NOP;
 }
