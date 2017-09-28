@@ -2,9 +2,11 @@
 #include <ncurses.h>
 #include <unistd.h>
 
+#include "datatypes.h"
 #include "display.h"
 #include "input.h"
 #include "key_mappings.h"
+#include "map.h"
 
 void init();
 void destroy();

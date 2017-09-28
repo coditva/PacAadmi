@@ -3,11 +3,8 @@
 
 #include <datatypes.h>
 
-/* Struct for window size */
-struct game_window_size_t {
-    int x;
-    int y;
-} game_window_size;
+/* Keep track of game window size */
+game_window_size_t game_window_size;
 
 /* Initialize the display */
 void display_init();
