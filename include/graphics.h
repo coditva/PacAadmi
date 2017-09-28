@@ -1,6 +1,7 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+/* The graphic to use for the cursor */
 struct cursor_t {
     int up;
     int down;

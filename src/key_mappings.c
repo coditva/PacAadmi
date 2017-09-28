@@ -1,5 +1,8 @@
 #include "key_mappings.h"
 
+/*
+ * Initialize key mappings
+ */
 void key_mappings_init()
 {
     key_map[MOVE_UP] = 'k';
@@ -10,6 +13,9 @@ void key_mappings_init()
     key_map[QUIT] = 'q';
 }
 
+/*
+ * Destroy all key mappings
+ */
 void key_mappings_destroy()
 {
 }

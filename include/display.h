@@ -3,6 +3,7 @@
 
 #include <datatypes.h>
 
+/* Struct for window size */
 struct game_window_size_t {
     int x;
     int y;
@@ -14,7 +15,10 @@ void display_init();
 /* Destroy the display */
 void display_destroy();
 
+/* Refresh all the windows */
 void display_draw();
+
+/* Move the position in the display */
 void display_move(pos_t pos);
 
 #endif /* end of include guard: DISPLAY_H */
