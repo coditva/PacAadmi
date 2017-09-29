@@ -43,7 +43,7 @@ void take_action(int key)
 
     } else if (key == MOVE_RIGHT) {
         pos.x++;
-        if (pos.x > game_window_size.y) pos.x = 0;
+        if (pos.x > game_window_size.x) pos.x = 0;
     }
 }
 
@@ -53,9 +53,10 @@ void take_action(int key)
 void game_loop()
 {
     int key = 0;
+    display_load_map();
     while (key != QUIT) {
         /* refresh display */
-        display_draw();
+        display_draw_game();
 
         /* get input and update position */
         key = input_get_key();
@@ -73,6 +74,7 @@ void init()
 {
     display_init();
     key_mappings_init();
+    map_init();
 
     /* initialize position of the cursor */
     pos.x = 0;

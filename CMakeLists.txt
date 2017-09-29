@@ -37,7 +37,11 @@ set(PROJECT_SOURCES
     src/display.c
     src/input.c
     src/key_mappings.c
+    src/map.c
 )
+
+# Copy data files to the build
+file(COPY ${PROJECT_SOURCE_DIR}/data DESTINATION ${PROJECT_BINARY_DIR})
 
 add_executable (${PROJECT_NAME} ${PROJECT_SOURCES})
 target_link_libraries(${PROJECT_NAME} ${PROJECT_LINKER_FLAGS})

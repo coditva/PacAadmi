@@ -3,6 +3,7 @@
 
 #include "display.h"
 #include "graphics.h"
+#include "map.h"
 
 /* Various windows in the game */
 WINDOW *main_window = NULL;
@@ -12,7 +13,10 @@ WINDOW *game_window = NULL;
 
 /* Store position of the cursor in the game */
 pos_t display_pos;
+/* Store map locally parsed for display */
+map_t display_map;
 
+/* Local functions */
 void top_bar_init();
 void bot_bar_init();
 void game_window_init();
@@ -28,6 +32,10 @@ void display_init()
     bot_bar = subwin(main_window, 1, COLS, LINES - 1, 0);
     game_window = subwin(main_window, LINES - 2, COLS, 1, 0);
 
+    /* remove cursor and don't echo keypresses */
+    noecho();
+    curs_set(0);
+
     /* initialize game size */
     game_window_size.x = COLS - 1;
     game_window_size.y = LINES - 3;
@@ -40,10 +48,6 @@ void display_init()
     top_bar_init();
     bot_bar_init();
     game_window_init();
-
-    /* remove cursor and don't echo keypresses */
-    noecho();
-    curs_set(0);
 }
 
 /*
@@ -65,8 +69,6 @@ void display_move(pos_t pos)
 {
     wattrset(game_window, A_NORMAL);
     mvwprintw(game_window, display_pos.y, display_pos.x, "%c", ' ');
-    wattrset(game_window, A_STANDOUT);
-    mvwprintw(game_window, pos.y, pos.x, "%c", cursor.right);
     display_pos.x = pos.x;
     display_pos.y = pos.y;
 }
@@ -81,6 +83,74 @@ void display_draw()
     wrefresh(bot_bar);
 }
 
+/*
+ * Draw game window again
+ */
+void display_draw_game()
+{
+    wattrset(game_window, A_NORMAL);
+    wmove(game_window, 0, 0);
+    for (int i = 0; i < display_map.size.x * display_map.size.y; ++i) {
+        if (display_map.data[i] == D_NEWLINE) {
+            wprintw(game_window, "\n");
+        } else {
+            wprintw(game_window, "%d", display_map.data[i]);
+        }
+    }
+
+    wattrset(game_window, A_STANDOUT);
+    mvwprintw(game_window, display_pos.y, display_pos.x, "%c", cursor.right);
+
+    wrefresh(game_window);
+}
+
+/*
+ * Load map in the display_map for drawing display later
+ * Every char in map is transformed to 4 chars in display map except newline
+ */
+void display_load_map()
+{
+    int map_size, map_char;
+
+    /* Initialize display_map which will store the display */
+    display_map.size.x = (map.size.x - 1) * 2 + 1;
+    display_map.size.y = map.size.y * 2;
+    display_map.data = (char *) malloc( display_map.size.x
+            * display_map.size.y
+            * sizeof(char));
+
+    /* Scale map to 2x */
+    map_size = map.size.x * map.size.y;
+    for (int i, j = 0; i < map_size; ++i, j += 2) {
+        switch (map.data[i]) {
+            case '-':
+                map_char = D_BRICK;
+                break;
+            case ' ':
+                map_char = D_DOT;
+                break;
+            case 'p':
+                map_char = D_PACMAN;
+                break;
+            case 'g':
+                map_char = D_GHOST;
+                break;
+            case 10:
+                display_map.data[j] = D_NEWLINE;
+                display_map.data[j + display_map.size.x] = D_NEWLINE;
+                j += display_map.size.x - 1;
+                continue;
+        }
+        display_map.data[j] = map_char;
+        display_map.data[j + 1] = map_char;
+        display_map.data[j + display_map.size.x] = map_char;
+        display_map.data[j + display_map.size.x + 1] = map_char;
+    }
+}
+
+/*
+ * Initialize game window
+ */
 void game_window_init()
 {
     wattrset(game_window, A_STANDOUT);
@@ -101,7 +171,7 @@ void top_bar_init()
     wrefresh(top_bar);
 }
 
-/**
+/*
  * Initialize the bottom bar
  */
 void bot_bar_init()
@@ -110,5 +180,6 @@ void bot_bar_init()
     for (int i = 0; i < COLS; ++i) {
         mvwprintw(bot_bar, 0, i, " ");
     }
+    mvwprintw(bot_bar, 0, 0, "%d", game_window_size.x);
     wrefresh(bot_bar);
 }

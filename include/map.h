@@ -3,6 +3,9 @@
 
 #include "datatypes.h"
 
+/* Store the map data */
+map_t map;
+
 /* Initialize the map */
 void map_init();
 

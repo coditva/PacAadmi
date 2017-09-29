@@ -15,7 +15,13 @@ void display_destroy();
 /* Refresh all the windows */
 void display_draw();
 
+/* Refresh the game window */
+void display_draw_game();
+
 /* Move the position in the display */
 void display_move(pos_t pos);
+
+/* Load the map stored in map.data in the game window */
+void display_load_map();
 
 #endif /* end of include guard: DISPLAY_H */

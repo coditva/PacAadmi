@@ -25,4 +25,21 @@ enum key_mappings {
     KEY_MAP_SIZE
 };
 
+/* Struct to describe map */
+typedef struct map_struct {
+    pos_t size;
+    char *data;
+} map_t;
+
+/* Enum of display elements */
+enum display_elements {
+    D_BRICK,
+    D_DOT,
+    D_BLANK,
+    D_PACMAN,
+    D_GHOST,
+    D_NEWLINE,
+    D_ELEMENTS_SIZE
+};
+
 #endif /* end of include guard: DATATYPES_H */
