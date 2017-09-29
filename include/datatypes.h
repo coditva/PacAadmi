@@ -37,9 +37,36 @@ enum display_elements {
     D_DOT,
     D_BLANK,
     D_PACMAN,
-    D_GHOST,
+    D_BLINKY,
+    D_PINKY,
+    D_INKY,
+    D_CLYDE,
     D_NEWLINE,
     D_ELEMENTS_SIZE
+};
+
+/* Enum of all colors */
+enum display_colors {
+    C_BLACK,
+    C_WHITE,
+    C_RED,
+    C_BLUE,
+    C_PINK,
+    C_CYAN,
+    C_ORANGE,
+    C_YELLOW
+};
+
+enum display_colors_pair {
+    C_BLACK_ON_BLACK,
+    C_BLACK_ON_WHITE,
+    C_BLACK_ON_RED,
+    C_BLACK_ON_BLUE,
+    C_BLACK_ON_PINK,
+    C_BLACK_ON_CYAN,
+    C_BLACK_ON_ORANGE,
+    C_BLACK_ON_YELLOW,
+    C_YELLOW_ON_BLACK
 };
 
 #endif /* end of include guard: DATATYPES_H */
