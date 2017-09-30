@@ -38,6 +38,7 @@ set(PROJECT_SOURCES
     src/input.c
     src/key_mappings.c
     src/map.c
+    src/character.c
 )
 
 # Copy data files to the build

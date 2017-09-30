@@ -7,7 +7,8 @@
  * Initialize input
  */
 void input_init()
-{ }
+{
+}
 
 /*
  * Destroy input

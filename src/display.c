@@ -11,11 +11,6 @@ WINDOW *top_bar = NULL;
 WINDOW *bot_bar = NULL;
 WINDOW *game_window = NULL;
 
-/* Store position of the cursor in the game */
-pos_t display_pos;
-/* Store map locally parsed for display */
-map_t display_map;
-
 /* Local functions */
 void top_bar_init();
 void bot_bar_init();
@@ -39,10 +34,6 @@ void display_init()
     game_window_size.x = COLS - 1;
     game_window_size.y = LINES - 3;
 
-    /* initialize game positions */
-    display_pos.x = 0;
-    display_pos.y = 0;
-
     /* initialize allt the windows */
     top_bar_init();
     bot_bar_init();
@@ -62,23 +53,13 @@ void display_destroy()
 }
 
 /*
- * Move the cursor to the new position
- */
-void display_move(pos_t pos)
-{
-    mvwprintw(game_window, display_pos.y, display_pos.x, "%c", ' ');
-    display_pos.x = pos.x;
-    display_pos.y = pos.y;
-}
-
-/*
  * Draw all the windows again
  */
 void display_draw()
 {
-    wrefresh(game_window);
     wrefresh(top_bar);
     wrefresh(bot_bar);
+    wrefresh(game_window);
 }
 
 /*
@@ -88,56 +69,57 @@ void display_draw_game()
 {
     enum display_colors_pair color;
     char object;
+    int map_size;
+    int y = 0, x = 0;
 
-    wmove(game_window, 0, 0);
-
-    /* Read each character and print display equivalent */
-    for (int i = 0; i < display_map.size.x * display_map.size.y; ++i) {
-        switch (display_map.data[i]) {
-            case D_BRICK:
+    map_size = map.size.x * map.size.y;
+    for (int i = 0; i < map_size; ++i) {
+        switch (map.data[i]) {
+            case '-':
                 color = C_BLACK_ON_BLUE;
                 object = ' ';
                 break;
-            case D_DOT:
+            case ' ':
                 color = C_YELLOW_ON_BLACK;
                 object = '.';
                 break;
-            case D_BLANK:
+            case ',':
                 color = C_BLACK_ON_BLACK;
                 object = ' ';
                 break;
-            case D_PACMAN:
+            case 'p':
                 color = C_BLACK_ON_YELLOW;
                 object = ' ';
                 break;
-            case D_BLINKY:
+            case 'b':
                 color = C_BLACK_ON_RED;
                 object = ' ';
                 break;
-            case D_PINKY:
+            case 's':
                 color = C_BLACK_ON_PINK;
                 object = ' ';
                 break;
-            case D_INKY:
+            case 'i':
                 color = C_BLACK_ON_CYAN;
                 object = ' ';
                 break;
-            case D_CLYDE:
+            case 'c':
                 color = C_BLACK_ON_ORANGE;
                 object = ' ';
                 break;
-            case D_NEWLINE:
-                break;
+            case 10:
+                /* don't add anything to map but go to next line */
+                y += 2;
+                continue;
         }
 
-        /* print the object with color */
+        x = (i % map.size.x) * 2;
+
         wattron(game_window, COLOR_PAIR(color));
-        wprintw(game_window, "%c", object);
+        mvwprintw(game_window, y,   x, "%c%c", object, object);
+        mvwprintw(game_window, y+1, x, "%c%c", object, object);
         wattroff(game_window, COLOR_PAIR(color));
     }
-
-    /* Display the pointer */
-    mvwprintw(game_window, display_pos.y, display_pos.x, "%c", cursor.right);
 
     /* Render */
     wrefresh(game_window);
@@ -149,60 +131,15 @@ void display_draw_game()
  */
 void display_load_map()
 {
-    int map_size, map_char;
+    pos_t display_map;
 
     /* Initialize display_map which will store the display */
-    display_map.size.x = (map.size.x - 1) * 2;
-    display_map.size.y = map.size.y * 2;
-
-    display_map.data = (char *) malloc(
-            display_map.size.x
-            * display_map.size.y
-            * sizeof(char));
+    display_map.x = (map.size.x - 1) * 2;
+    display_map.y = map.size.y * 2;
 
     /* Create a new window for holding the map */
-    game_window = subwin(main_window,
-            display_map.size.y,
-            display_map.size.x,
-            (LINES - display_map.size.y ) / 2,
-            (COLS - display_map.size.x) / 2);
-
-    /* Scale map to 2x */
-    map_size = map.size.x * map.size.y;
-    for (int i, j = 0; i < map_size; ++i, j += 2) {
-        switch (map.data[i]) {
-            case '-':
-                map_char = D_BRICK;
-                break;
-            case ' ':
-                map_char = D_DOT;
-                break;
-            case 'p':
-                map_char = D_PACMAN;
-                break;
-            case 'b':
-                map_char = D_BLINKY;
-                break;
-            case 's':
-                map_char = D_PINKY;
-                break;
-            case 'i':
-                map_char = D_INKY;
-                break;
-            case 'c':
-                map_char = D_CLYDE;
-                break;
-            case 10:
-                /* don't add anything to map but go to next line */
-                j += display_map.size.x - 2;
-                continue;
-        }
-
-        display_map.data[j] = map_char;
-        display_map.data[j + 1] = map_char;
-        display_map.data[j + display_map.size.x] = map_char;
-        display_map.data[j + display_map.size.x + 1] = map_char;
-    }
+    game_window = subwin(main_window, display_map.y, display_map.x,
+            (LINES - display_map.y ) / 2, (COLS - display_map.x) / 2);
 }
 
 /*

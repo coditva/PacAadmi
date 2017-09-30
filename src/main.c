@@ -7,6 +7,7 @@
 #include "input.h"
 #include "key_mappings.h"
 #include "map.h"
+#include "character.h"
 
 void init();
 void destroy();
@@ -31,19 +32,19 @@ void take_action(int key)
 {
     if (key == MOVE_DOWN) {
         pos.y++;
-        if (pos.y > game_window_size.y) pos.y = 0;
+        if (pos.y >= map_window_size.y) pos.y = 0;
 
     } else if (key == MOVE_UP) {
         pos.y--;
-        if (pos.y < 0) pos.y = game_window_size.y;
+        if (pos.y < 0) pos.y = map_window_size.y - 1;
 
     } else if (key == MOVE_LEFT) {
         pos.x--;
-        if (pos.x < 0) pos.x = game_window_size.x;
+        if (pos.x < 0) pos.x = map_window_size.x - 1;
 
     } else if (key == MOVE_RIGHT) {
         pos.x++;
-        if (pos.x > game_window_size.x) pos.x = 0;
+        if (pos.x >= map_window_size.x) pos.x = 0;
     }
 }
 
@@ -53,8 +54,8 @@ void take_action(int key)
 void game_loop()
 {
     int key = 0;
-    display_load_map();
     while (key != QUIT) {
+
         /* refresh display */
         display_draw_game();
 
@@ -62,8 +63,8 @@ void game_loop()
         key = input_get_key();
         take_action(key);
 
-        /* send updated pos to display */
-        display_move(pos);
+        /* send updated pos to map */
+        character_move(CH_PACMAN, pos);
     }
 }
 
@@ -75,10 +76,11 @@ void init()
     display_init();
     key_mappings_init();
     map_init();
+    display_load_map();
+    character_init_all();
 
     /* initialize position of the cursor */
-    pos.x = 0;
-    pos.y = 0;
+    character_get_position(CH_PACMAN, &pos);
 }
 
 /**

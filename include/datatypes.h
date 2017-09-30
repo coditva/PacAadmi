@@ -31,6 +31,16 @@ typedef struct map_struct {
     char *data;
 } map_t;
 
+/* Characters in the game */
+typedef enum character_enum {
+    CH_PACMAN,
+    CH_BLINKY,
+    CH_PINKY,
+    CH_INKY,
+    CH_CLYDE,
+    CH_SIZE
+} character_t;
+
 /* Enum of display elements */
 enum display_elements {
     D_BRICK,
