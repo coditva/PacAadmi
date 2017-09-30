@@ -56,15 +56,15 @@ void game_loop()
     int key = 0;
     while (key != QUIT) {
 
+        /* send updated pos to map */
+        character_move(CH_PACMAN, pos);
+
         /* refresh display */
         display_draw_game();
 
         /* get input and update position */
         key = input_get_key();
         take_action(key);
-
-        /* send updated pos to map */
-        character_move(CH_PACMAN, pos);
     }
 }
 
