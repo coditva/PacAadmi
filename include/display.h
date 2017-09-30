@@ -1,8 +1,6 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include <datatypes.h>
-
 /* Initialize the display */
 void display_init();
 

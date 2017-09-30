@@ -1,5 +1,6 @@
 #include <ncurses.h>
 
+#include "datatypes.h"
 #include "input.h"
 #include "key_mappings.h"
 

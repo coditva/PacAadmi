@@ -1,8 +1,6 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
-#include "datatypes.h"
-
 void character_init_all();
 void character_get_position(character_t character, pos_t *pos);
 

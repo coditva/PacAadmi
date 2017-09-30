@@ -1,8 +1,8 @@
 #include <ncurses.h>
 #include <stdlib.h>
 
+#include "datatypes.h"
 #include "display.h"
-#include "graphics.h"
 #include "map.h"
 
 /* Various windows in the game */
@@ -29,10 +29,6 @@ void display_init()
     /* remove cursor and don't echo keypresses */
     noecho();
     curs_set(0);
-
-    /* initialize game size */
-    game_window_size.x = COLS - 1;
-    game_window_size.y = LINES - 3;
 
     /* initialize allt the windows */
     top_bar_init();

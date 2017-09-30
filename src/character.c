@@ -1,3 +1,4 @@
+#include "datatypes.h"
 #include "character.h"
 #include "map.h"
 

@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 
+#include "datatypes.h"
 #include "map.h"
 
 /* Array to keep track of positions of all characters */
